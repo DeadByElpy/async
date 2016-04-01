@@ -403,5 +403,60 @@ describe('serial', function () {
             done();
         });
     });
+    
+    it('should fail: 1 simple tasks, invoke done callback twice', function ( done ) {
+        var taskCounter = 0,
+            callbackCounter = 0;
+
+        serial([
+            function ( callback ) {
+                taskCounter++;
+                callback(null);
+                callback(null);
+            }
+        ],
+        function ( error, list, hash ) {
+            callbackCounter++;
+            should.not.exist(error);
+            
+            taskCounter.should.equal(1);
+            callbackCounter.should.equal(1);
+        });
+        
+        setTimeout(function () {
+            callbackCounter.should.equal(1);
+            done();
+        }, 5);
+    });
+
+    it('should fail: 2 simple tasks, both invoke callback twice', function ( done ) {
+        var taskCounter = 0,
+            callbackCounter = 0;
+
+        serial([
+            function ( callback ) {
+                taskCounter++;
+                callback(null);
+                callback(null);
+            },
+            function ( callback ) {
+                taskCounter++;
+                callback(null);
+                callback(null);
+            }
+        ],
+        function ( error, list, hash ) {
+            callbackCounter++;
+            should.not.exist(error);
+            
+            taskCounter.should.equal(2);
+            callbackCounter.should.equal(0);
+        });
+        
+        setTimeout(function () {
+            callbackCounter.should.equal(0);
+            done();
+        }, 5);
+    });
 
 });
