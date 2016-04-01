@@ -403,4 +403,91 @@ describe('parallel', function () {
         }, 5);
     });
 
+    it('should fail: 2 simple tasks, last task invoke done callback twice', function ( done ) {
+        var taskCounter = 0,
+            callbackCounter = 0;
+
+        parallel([
+            function ( callback ) {
+                taskCounter++;
+                callback(1);
+            },
+            function ( callback ) {
+                taskCounter++;
+                callback(2);
+                callback(2);
+            }
+        ],
+        function ( error, list, hash ) {
+            callbackCounter++;
+            should.not.exist(error);
+            
+            taskCounter.should.equal(2);
+            callbackCounter.should.equal(1);
+        });
+
+        setTimeout(function () {
+            taskCounter.should.equal(2);
+            callbackCounter.should.equal(1);
+            done();
+        }, 5);
+    });
+    
+    it('should fail: 2 simple tasks, one task invoke done callback twice, second will never invoke done callback', function ( done ) {
+        var taskCounter = 0,
+            callbackCounter = 0;
+
+        parallel([
+            function ( callback ) {
+                taskCounter++;
+                callback(1);
+                callback(1);
+            },
+            function ( callback ) {
+                taskCounter++;
+            }
+        ],
+        function ( error, list, hash ) {
+            callbackCounter++;
+            should.not.exist(error);
+            
+            taskCounter.should.equal(2);
+            callbackCounter.should.equal(1);
+        });
+
+        setTimeout(function () {
+            taskCounter.should.equal(2);
+            callbackCounter.should.equal(1);
+            done();
+        }, 5);
+    });
+
+    it('should fail: one simple tasks, call done callback 4 times', function ( done ) {
+        var taskCounter = 0,
+            callbackCounter = 0;
+
+        parallel([
+            function ( callback ) {
+                taskCounter++;
+                callback(1);
+                callback(1);
+                callback(1);
+                callback(1);
+            }
+        ],
+        function ( error, list, hash ) {
+            callbackCounter++;
+            should.not.exist(error);
+            
+            taskCounter.should.equal(1);
+            callbackCounter.should.equal(1);
+        });
+
+        setTimeout(function () {
+            taskCounter.should.equal(1);
+            callbackCounter.should.equal(1);
+            done();
+        }, 5);
+    });
+
 });
