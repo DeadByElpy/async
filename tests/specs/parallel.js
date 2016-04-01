@@ -410,12 +410,12 @@ describe('parallel', function () {
         parallel([
             function ( callback ) {
                 taskCounter++;
-                callback(1);
+                callback(null);
             },
             function ( callback ) {
                 taskCounter++;
-                callback(2);
-                callback(2);
+                callback(null);
+                callback(null);
             }
         ],
         function ( error, list, hash ) {
@@ -440,8 +440,8 @@ describe('parallel', function () {
         parallel([
             function ( callback ) {
                 taskCounter++;
-                callback(1);
-                callback(1);
+                callback(null);
+                callback(null);
             },
             function ( callback ) {
                 taskCounter++;
@@ -469,10 +469,10 @@ describe('parallel', function () {
         parallel([
             function ( callback ) {
                 taskCounter++;
-                callback(1);
-                callback(1);
-                callback(1);
-                callback(1);
+                callback(null);
+                callback(null);
+                callback(null);
+                callback(null);
             }
         ],
         function ( error, list, hash ) {
